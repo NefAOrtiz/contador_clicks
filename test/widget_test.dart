@@ -1,30 +1,50 @@
-// This is a basic Flutter widget test.
-//
-// To perform an interaction with a widget in your test, use the WidgetTester
-// utility in the flutter_test package. For example, you can send tap and scroll
-// gestures. You can also use WidgetTester to find child widgets in the widget
-// tree, read text, and verify that the values of widget properties are correct.
-
 import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
-
 import 'package:contador_clicks/main.dart';
 
 void main() {
-  testWidgets('Counter increments smoke test', (WidgetTester tester) async {
-    // Build our app and trigger a frame.
-    await tester.pumpWidget(const MyApp());
+  testWidgets('El contador incrementa al presionar "Incrementar"', (WidgetTester tester) async {
+    await tester.pumpWidget(const ContadorApp());
 
-    // Verify that our counter starts at 0.
-    expect(find.text('0'), findsOneWidget);
-    expect(find.text('1'), findsNothing);
+    // Verifica que comienza en 0 clicks
+    expect(find.text('0 clicks'), findsOneWidget);
 
-    // Tap the '+' icon and trigger a frame.
-    await tester.tap(find.byIcon(Icons.add));
+    // Toca el botón "Incrementar"
+    await tester.tap(find.widgetWithText(ElevatedButton, 'Incrementar'));
     await tester.pump();
 
-    // Verify that our counter has incremented.
-    expect(find.text('0'), findsNothing);
-    expect(find.text('1'), findsOneWidget);
+    // Verifica que ahora diga "1 click"
+    expect(find.text('1 click'), findsOneWidget);
+  });
+
+  testWidgets('El contador no baja de 0', (WidgetTester tester) async {
+    await tester.pumpWidget(const ContadorApp());
+
+    // Presiona "Decrementar" sin haber incrementado
+    await tester.tap(find.widgetWithText(ElevatedButton, 'Decrementar'));
+    await tester.pump();
+
+    // Aún debería mostrar 0
+    expect(find.text('0 clicks'), findsOneWidget);
+  });
+
+  testWidgets('El contador se resetea a 0', (WidgetTester tester) async {
+    await tester.pumpWidget(const ContadorApp());
+
+    // Incrementar dos veces
+    await tester.tap(find.widgetWithText(ElevatedButton, 'Incrementar'));
+    await tester.pump();
+    await tester.tap(find.widgetWithText(ElevatedButton, 'Incrementar'));
+    await tester.pump();
+
+    // Verificar que muestra 2
+    expect(find.text('2 clicks'), findsOneWidget);
+
+    // Presionar "Resetear"
+    await tester.tap(find.widgetWithText(ElevatedButton, 'Resetear'));
+    await tester.pump();
+
+    // Verificar que vuelve a 0
+    expect(find.text('0 clicks'), findsOneWidget);
   });
 }
