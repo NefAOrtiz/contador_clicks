@@ -1,22 +1,31 @@
 import 'package:flutter/material.dart';
 
 void main() {
-  runApp(ContadorApp());
+  runApp(const ContadorApp());
 }
 
 class ContadorApp extends StatelessWidget {
+  const ContadorApp({super.key});
+
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
       title: 'Contador de Clicks',
-      home: ContadorPage(),
+      debugShowCheckedModeBanner: false,
+      theme: ThemeData(
+        colorScheme: ColorScheme.fromSeed(seedColor: Colors.indigo),
+        useMaterial3: true,
+      ),
+      home: const ContadorPage(),
     );
   }
 }
 
 class ContadorPage extends StatefulWidget {
+  const ContadorPage({super.key});
+
   @override
-  _ContadorPageState createState() => _ContadorPageState();
+  State<ContadorPage> createState() => _ContadorPageState();
 }
 
 class _ContadorPageState extends State<ContadorPage> {
@@ -44,41 +53,92 @@ class _ContadorPageState extends State<ContadorPage> {
 
   @override
   Widget build(BuildContext context) {
+    final bool singular = contador == 1;
+
     return Scaffold(
       appBar: AppBar(
-        title: Text('Contador de Clicks'),
+        title: const Text('Contador de Clicks'),
+        centerTitle: true,
+        backgroundColor: Theme.of(context).colorScheme.primary,
+        foregroundColor: Colors.white,
+        elevation: 4,
       ),
-      body: Center(
+      body: Container(
+        width: double.infinity,
+        padding: const EdgeInsets.all(24.0),
+        color: Colors.grey[100],
         child: Column(
           mainAxisAlignment: MainAxisAlignment.center,
           children: <Widget>[
-            Text(
-              '$contador ${contador == 1 ? 'click' : 'clicks'}',
-              style: TextStyle(fontSize: 30),
+            Card(
+              elevation: 8,
+              shape: RoundedRectangleBorder(
+                borderRadius: BorderRadius.circular(20),
+              ),
+              color: Colors.white,
+              child: Padding(
+                padding: const EdgeInsets.symmetric(vertical: 30, horizontal: 60),
+                child: Text(
+                  '$contador ${singular ? 'click' : 'clicks'}',
+                  style: const TextStyle(
+                    fontSize: 36,
+                    fontWeight: FontWeight.bold,
+                    color: Colors.indigo,
+                  ),
+                ),
+              ),
             ),
-            SizedBox(height: 30),
-            Row(
-              mainAxisAlignment: MainAxisAlignment.center,
-              children: <Widget>[
-                ElevatedButton(
+            const SizedBox(height: 40),
+            Wrap(
+              spacing: 20,
+              runSpacing: 16,
+              alignment: WrapAlignment.center,
+              children: [
+                ElevatedButton.icon(
+                  style: ElevatedButton.styleFrom(
+                    backgroundColor: Colors.green,
+                    foregroundColor: Colors.white,
+                    padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 12),
+                    shape: RoundedRectangleBorder(
+                      borderRadius: BorderRadius.circular(12),
+                    ),
+                  ),
                   onPressed: _incrementar,
-                  child: Text('+'),
+                  icon: const Icon(Icons.add),
+                  label: const Text('Incrementar'),
                 ),
-                SizedBox(width: 20),
-                ElevatedButton(
+                ElevatedButton.icon(
+                  style: ElevatedButton.styleFrom(
+                    backgroundColor: Colors.orange,
+                    foregroundColor: Colors.white,
+                    padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 12),
+                    shape: RoundedRectangleBorder(
+                      borderRadius: BorderRadius.circular(12),
+                    ),
+                  ),
                   onPressed: _decrementar,
-                  child: Text('-'),
+                  icon: const Icon(Icons.remove),
+                  label: const Text('Decrementar'),
                 ),
-                SizedBox(width: 20),
-                ElevatedButton(
+                ElevatedButton.icon(
+                  style: ElevatedButton.styleFrom(
+                    backgroundColor: Colors.red,
+                    foregroundColor: Colors.white,
+                    padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 12),
+                    shape: RoundedRectangleBorder(
+                      borderRadius: BorderRadius.circular(12),
+                    ),
+                  ),
                   onPressed: _resetear,
-                  child: Text('Reset'),
+                  icon: const Icon(Icons.refresh),
+                  label: const Text('Resetear'),
                 ),
               ],
-            )
+            ),
           ],
         ),
       ),
     );
   }
 }
+
